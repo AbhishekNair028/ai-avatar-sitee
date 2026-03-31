@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Persona AI | Abhishek Nair</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #050505; color: white; font-family: sans-serif; }
+        .gradient-text { background: linear-gradient(to bottom, #fff, #666); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+</head>
+<body>
+    <nav class="flex justify-between items-center p-6 max-w-7xl mx-auto border-b border-white/10">
+        <div class="text-2xl font-bold tracking-tighter">Persona<span class="text-purple-500">AI</span></div>
+        <div class="text-sm font-medium text-gray-400">By Abhishek Nair</div>
+    </nav>
+
+    <section class="py-20 px-6 text-center">
+        <h1 class="text-5xl md:text-7xl font-extrabold mb-6 gradient-text">Your Photos.<br>In Motion.</h1>
+        <p class="text-gray-400 text-lg max-w-2xl mx-auto mb-10">Upload a photo, write a script, and get an 8s AI video instantly.</p>
+        <a href="#studio" class="bg-purple-600 hover:bg-purple-500 px-8 py-4 rounded-xl font-bold transition">Start Creating</a>
+    </section>
+
+    <section id="studio" class="max-w-5xl mx-auto px-6 py-10">
+        <div class="grid md:grid-cols-2 gap-10 bg-[#111] p-8 rounded-3xl border border-white/10 shadow-2xl">
+            
+            <div class="space-y-6">
+                <h3 class="text-2xl font-bold">Studio</h3>
+                
+                <div>
+                    <label class="block text-sm text-gray-400 mb-2 font-semibold">1. Upload Image</label>
+                    <div id="drop-zone" class="border-2 border-dashed border-white/10 rounded-2xl h-40 flex items-center justify-center cursor-pointer hover:border-purple-500/50 hover:bg-purple-500/5 transition overflow-hidden">
+                        <span id="preview-text" class="text-gray-500 text-sm">Click to select photo</span>
+                        <img id="image-preview" class="hidden w-full h-full object-cover">
+                        <input type="file" id="file-input" class="hidden" accept="image/*">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm text-gray-400 mb-2 font-semibold">2. Enter Script</label>
+                    <textarea id="script-input" rows="4" class="w-full bg-black border border-white/10 rounded-xl p-4 outline-none focus:border-purple-500 transition" placeholder="Hello world, I am an AI avatar..."></textarea>
+                </div>
+
+                <button onclick="generateVideo()" id="gen-btn" class="w-full bg-purple-600 hover:bg-purple-500 py-4 rounded-xl font-bold transition">
+                    Generate AI Video
+                </button>
+            </div>
+
+            <div class="bg-black rounded-2xl border border-white/5 flex flex-col items-center justify-center relative aspect-[9/16]">
+                <div id="video-placeholder" class="text-center p-10">
+                    <p class="text-gray-600 text-sm">Your video will appear here</p>
+                </div>
+                <video id="output-video" controls class="hidden w-full h-full object-cover rounded-2xl"></video>
+                <div id="loader" class="hidden flex flex-col items-center">
+                    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-purple-500 mb-4"></div>
+                    <p class="text-purple-400 animate-pulse text-sm font-semibold">AI is thinking...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 px-6 max-w-7xl mx-auto">
+        <h2 class="text-3xl font-bold text-center mb-12">How it works</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-white/5 p-8 rounded-2xl border border-white/5">
+                <span class="text-purple-500 font-bold">Step 1</span>
+                <h4 class="text-xl font-bold mt-2">Upload Photo</h4>
+                <p class="text-gray-500 text-sm mt-2">Use a clear front-facing portrait of yourself.</p>
+            </div>
+            <div class="bg-white/5 p-8 rounded-2xl border border-white/5">
+                <span class="text-purple-500 font-bold">Step 2</span>
+                <h4 class="text-xl font-bold mt-2">Write Script</h4>
+                <p class="text-gray-500 text-sm mt-2">Type exactly what you want the AI to say.</p>
+            </div>
+            <div class="bg-white/5 p-8 rounded-2xl border border-white/5">
+                <span class="text-purple-500 font-bold">Step 3</span>
+                <h4 class="text-xl font-bold mt-2">Download</h4>
+                <p class="text-gray-500 text-sm mt-2">Wait for the process to finish and save your 8s video.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-10 text-center text-gray-600 text-xs border-t border-white/5">
+        &copy; 2026 Abhishek Nair • Pillai College of Engineering
+    </footer>
+
+    <script>
+        const fileInput = document.getElementById('file-input');
+        const dropZone = document.getElementById('drop-zone');
+        const imagePreview = document.getElementById('image-preview');
+        const previewText = document.getElementById('preview-text');
+        
+        dropZone.onclick = () => fileInput.click();
+
+        fileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                imagePreview.src = url;
+                imagePreview.classList.remove('hidden');
+                previewText.classList.add('hidden');
+            }
+        };
+
+        function generateVideo() {
+            const script = document.getElementById('script-input').value;
+            if (!script) return alert("Write a script first!");
+
+            // UI Changes
+            document.getElementById('gen-btn').disabled = true;
+            document.getElementById('video-placeholder').classList.add('hidden');
+            document.getElementById('loader').classList.remove('hidden');
+
+            // Simulate AI Generation
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+                const video = document.getElementById('output-video');
+                video.src = "https://www.w3schools.com/html/mov_bbb.mp4"; // Placeholder
+                video.classList.remove('hidden');
+                document.getElementById('gen-btn').disabled = false;
+                alert("AI Video Generated Successfully!");
+            }, 4000);
+        }
+    </script>
+</body>
+</html>

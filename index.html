@@ -1,186 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Persona AI | Abhishek Nair</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { background-color: #050505; color: white; font-family: sans-serif; }
-        .gradient-text { background: linear-gradient(to bottom, #fff, #666); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Persona AI | Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #fdfcf9; color: #1a1a1a; }
+        h1, h2, .serif { font-family: 'DM Serif Display', serif; }
+        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border: 1px solid #e5e7eb; }
+        .btn-primary { background-color: #2d2d2d; color: white; transition: all 0.3s ease; }
+        .btn-primary:hover { background-color: #000; transform: translateY(-1px); }
+        .step-number { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #6b7280; }
+    </style>
 </head>
 <body>
-    <nav class="flex justify-between items-center p-6 max-w-7xl mx-auto border-b border-white/10">
-        <div class="text-2xl font-bold tracking-tighter">Persona<span class="text-purple-500">AI</span></div>
-        <div class="text-sm font-medium text-gray-400">Pillai College Innovation Cell</div>
-    </nav>
 
-    <section class="py-20 px-6 text-center">
-        <h1 class="text-5xl md:text-7xl font-extrabold mb-6 gradient-text">Your Photos.<br>In Motion.</h1>
-        <p class="text-gray-400 text-lg max-w-2xl mx-auto mb-10">Upload a photo, write a script, and get an 8s AI video instantly.</p>
-        <a href="#studio" class="bg-purple-600 hover:bg-purple-500 px-8 py-4 rounded-xl font-bold transition">Start Creating</a>
-    </section>
+    <nav class="flex justify-between items-center px-8 py-6 max-w-7xl mx-auto">
+        <div class="text-2xl font-bold tracking-tight serif">Persona<span class="text-stone-400">AI</span></div>
+        <div class="hidden md:flex space-x-8 text-sm font-medium">
+            <a href="#process" class="hover:text-stone-500">Process</a>
+            <a href="#studio" class="hover:text-stone-500">Studio</a>
+            <a href="#" class="px-4 py-2 rounded-full border border-black hover:bg-black hover:text-white transition">Get Started</a>
+        </div>
+    </nav>
 
-    <section id="studio" class="max-w-5xl mx-auto px-6 py-10 pb-32">
-        <div class="grid md:grid-cols-2 gap-10 bg-[#111] p-8 rounded-3xl border border-white/10 shadow-2xl">
-            <div class="space-y-6">
-                <h3 class="text-2xl font-bold">Studio</h3>
-                <div>
-                    <label class="block text-sm text-gray-400 mb-2 font-semibold">1. Upload Image</label>
-                    <div id="drop-zone" class="border-2 border-dashed border-white/10 rounded-2xl h-40 flex items-center justify-center cursor-pointer hover:border-purple-500/50 transition overflow-hidden relative">
-                        <span id="preview-text" class="text-gray-500 text-sm">Click to select photo</span>
-                        <img id="image-preview" class="hidden absolute inset-0 w-full h-full object-cover">
-                        <input type="file" id="file-input" class="hidden" accept="image/*">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-sm text-gray-400 mb-2 font-semibold">2. Enter Script</label>
-                    <textarea id="script-input" rows="4" class="w-full bg-black border border-white/10 rounded-xl p-4 outline-none focus:border-purple-500 transition text-white" placeholder="Hello, I am your AI avatar..."></textarea>
-                </div>
-                <button onclick="generateVideo()" id="gen-btn" class="w-full bg-purple-600 hover:bg-purple-500 py-4 rounded-xl font-bold transition">
-                    Generate AI Video
-                </button>
-            </div>
+    <section class="max-w-7xl mx-auto px-8 py-20 grid md:grid-cols-2 gap-12 items-center">
+        <div>
+            <h1 class="text-6xl md:text-8xl leading-tight mb-6">Bring your photos to life.</h1>
+            <p class="text-xl text-stone-600 mb-10 leading-relaxed">A high-performance generative engine built for creators. Turn static portraits into cinematic 8-second AI video presentations instantly.</p>
+            <a href="#studio" class="btn-primary px-10 py-5 rounded-full text-lg font-semibold inline-block">Enter the Studio</a>
+        </div>
+        <div class="relative">
+            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80" class="rounded-3xl shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500" alt="Abstract Art">
+        </div>
+    </section>
 
-            <div class="bg-black rounded-2xl border border-white/5 flex flex-col items-center justify-center relative aspect-[9/16] overflow-hidden">
-                <div id="video-placeholder" class="text-center p-10">
-                    <p class="text-gray-600 text-sm">Your video will appear here</p>
-                </div>
-                <video id="output-video" controls class="hidden w-full h-full object-cover rounded-2xl"></video>
-                <div id="loader" class="hidden flex flex-col items-center p-6 text-center">
-                    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-purple-500 mb-4"></div>
-                    <p class="text-purple-400 animate-pulse text-sm font-semibold">AI is generating your video...<br><span class="text-[10px] text-gray-500">Processing usually takes 30-60s</span></p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <section id="process" class="bg-white py-24 border-y border-stone-100">
+        <div class="max-w-7xl mx-auto px-8">
+            <h2 class="text-4xl mb-16 serif">The Process</h2>
+            <div class="grid md:grid-cols-3 gap-16">
+                <div>
+                    <span class="step-number">Step 01</span>
+                    <h3 class="text-xl font-semibold mt-4 mb-2">Upload Portrait</h3>
+                    <p class="text-stone-500 text-sm">Select a clear, front-facing photo. Our engine analyzes facial landmarks for precise lip-syncing.</p>
+                </div>
+                <div>
+                    <span class="step-number">Step 02</span>
+                    <h3 class="text-xl font-semibold mt-4 mb-2">Refine Script</h3>
+                    <p class="text-stone-500 text-sm">Input your dialogue. Our AI supports 40+ languages with natural, emotive inflection.</p>
+                </div>
+                <div>
+                    <span class="step-number">Step 03</span>
+                    <h3 class="text-xl font-semibold mt-4 mb-2">Generate Video</h3>
+                    <p class="text-stone-500 text-sm">Render your cinematic avatar. Download in 1080p for your business presentations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <footer class="py-10 text-center text-gray-600 text-xs border-t border-white/5">
-        &copy; 2026 Abhishek Nair • Business Plan Competition
-    </footer>
+    <section id="studio" class="py-24 max-w-7xl mx-auto px-8">
+        <div class="glass-card rounded-[3rem] p-12 shadow-sm grid md:grid-cols-2 gap-12 border border-stone-200">
+            <div class="space-y-8">
+                <h2 class="text-3xl serif">Studio Interface</h2>
+                
+                <div class="space-y-4">
+                    <label class="block text-sm font-semibold text-stone-500 uppercase tracking-widest">01. Image Asset</label>
+                    <div id="drop-zone" class="border border-dashed border-stone-300 rounded-3xl h-64 flex flex-col items-center justify-center cursor-pointer hover:bg-stone-50 transition relative overflow-hidden">
+                        <img id="image-preview" class="hidden absolute inset-0 w-full h-full object-cover">
+                        <div id="upload-placeholder" class="text-center p-6">
+                            <p class="text-sm font-medium">Click to upload photo</p>
+                            <p class="text-xs text-stone-400 mt-1">PNG, JPG up to 10MB</p>
+                        </div>
+                        <input type="file" id="file-input" class="hidden" accept="image/*">
+                    </div>
+                    <p id="upload-status" class="text-xs font-semibold text-stone-400"></p>
+                </div>
 
-    <script>
-       // --- CONFIGURATION ---
-const DID_API_KEY = "YWJoaXNoZWtuYWlyczAyOEBnbWFpbC5jb20:E1FkG4t-OssTEQhqJbLxZ"; 
-const IMGBB_API_KEY = "27252187684aa3f89d1b79e41b0bb48e"; 
+                <div class="space-y-4">
+                    <label class="block text-sm font-semibold text-stone-500 uppercase tracking-widest">02. Script Input</label>
+                    <textarea id="script-input" rows="5" class="w-full bg-stone-50 border border-stone-200 rounded-2xl p-6 outline-none focus:ring-1 focus:ring-black transition" placeholder="Enter the dialogue for your AI avatar..."></textarea>
+                </div>
 
-// --- ELEMENTS ---
-const fileInput = document.getElementById('file-input');
-const dropZone = document.getElementById('drop-zone');
-const imagePreview = document.getElementById('image-preview');
-const previewText = document.getElementById('preview-text');
-const genBtn = document.getElementById('gen-btn');
-let uploadedImageUrl = ""; 
+                <button onclick="generateVideo()" id="gen-btn" class="w-full btn-primary py-5 rounded-full font-bold shadow-lg">
+                    Generate Cinematic Video
+                </button>
+            </div>
 
-// --- 1. HANDLE IMAGE UPLOAD TO IMGBB ---
-dropZone.onclick = () => fileInput.click();
+            <div class="bg-stone-100 rounded-[2rem] flex flex-col items-center justify-center relative min-h-[500px] overflow-hidden border border-stone-200">
+                <div id="video-placeholder" class="text-center p-12">
+                    <p class="serif text-2xl text-stone-300">Preview Engine</p>
+                </div>
+                <video id="output-video" controls class="hidden w-full h-full object-cover"></video>
+                <div id="loader" class="hidden flex flex-col items-center text-center">
+                    <div class="w-12 h-12 border-2 border-stone-300 border-t-black rounded-full animate-spin mb-6"></div>
+                    <p class="serif text-xl">Creating Motion...</p>
+                    <p class="text-xs text-stone-400 mt-2">Generative AI usually takes 45s</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-fileInput.onchange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+    <footer class="py-12 text-center text-stone-400 text-xs uppercase tracking-[0.2em]">
+        &copy; 2026 Abhishek Nair &bull; Pillai College Engineering &bull; Innovation Cell
+    </footer>
 
-    // Show local preview immediately
-    imagePreview.src = URL.createObjectURL(file);
-    imagePreview.classList.remove('hidden');
-    previewText.innerText = "Uploading to Cloud...";
-    genBtn.disabled = true;
+    <script>
+        const DID_API_KEY = "YWJoaXNoZWtuYWlyczAyOEBnbWFpbC5jb20:E1FkG4t-OssTEQhqJbLxZ"; 
+        const IMGBB_API_KEY = "27252187684aa3f89d1b79e41b0bb48e"; 
 
-    // Upload to ImgBB (Acts as our temporary database)
-    const formData = new FormData();
-    formData.append("image", file);
+        const fileInput = document.getElementById('file-input');
+        const dropZone = document.getElementById('drop-zone');
+        const imagePreview = document.getElementById('image-preview');
+        const uploadStatus = document.getElementById('upload-status');
+        const genBtn = document.getElementById('gen-btn');
+        let uploadedImageUrl = ""; 
 
-    try {
-        const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
-            method: "POST",
-            body: formData
-        });
-        const data = await res.json();
-        if (data.success) {
-            uploadedImageUrl = data.data.url; // This is the public URL D-ID needs
-            previewText.innerText = "Cloud Sync Complete ✅";
+        dropZone.onclick = () => fileInput.click();
+
+        fileInput.onchange = async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            imagePreview.src = URL.createObjectURL(file);
+            imagePreview.classList.remove('hidden');
+            document.getElementById('upload-placeholder').classList.add('hidden');
+            uploadStatus.innerText = "Syncing with cloud assets...";
+            genBtn.disabled = true;
+
+            const formData = new FormData();
+            formData.append("image", file);
+
+            try {
+                const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                    method: "POST",
+                    body: formData
+                });
+                const data = await res.json();
+                if (data.success) {
+                    uploadedImageUrl = data.data.url;
+                    uploadStatus.innerText = "Cloud Assets Ready ✅";
+                    genBtn.disabled = false;
+                }
+            } catch (err) {
+                uploadStatus.innerText = "Sync Failed. Retrying...";
+                genBtn.disabled = false;
+            }
+        };
+
+        async function generateVideo() {
+            const script = document.getElementById('script-input').value;
+            if (!script || !uploadedImageUrl) return alert("Upload photo and enter script.");
+
+            genBtn.disabled = true;
+            document.getElementById('video-placeholder').classList.add('hidden');
+            document.getElementById('loader').classList.remove('hidden');
+
+            try {
+                const response = await fetch("https://api.d-id.com/talks", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Basic ${DID_API_KEY}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        "script": {
+                            "type": "text",
+                            "input": script,
+                            "provider": { "type": "microsoft", "voice_id": "en-US-ChristopherNeural" }
+                        },
+                        "source_url": uploadedImageUrl
+                    })
+                });
+
+                const data = await response.json();
+                if (data.id) checkStatus(data.id);
+                else throw new Error(data.message);
+            } catch (err) {
+                alert("Generation Error: " + err.message);
+                resetUI();
+            }
+        }
+
+        async function checkStatus(id) {
+            try {
+                const res = await fetch(`https://api.d-id.com/talks/${id}`, {
+                    headers: { "Authorization": `Basic ${DID_API_KEY}` }
+                });
+                const data = await res.json();
+
+                if (data.status === "done") {
+                    const video = document.getElementById('output-video');
+                    video.src = data.result_url;
+                    video.classList.remove('hidden');
+                    document.getElementById('loader').classList.add('hidden');
+                    genBtn.disabled = false;
+                } else if (data.status === "error") {
+                    alert("Model error. Check photo quality.");
+                    resetUI();
+                } else {
+                    setTimeout(() => checkStatus(id), 4000);
+                }
+            } catch (err) { resetUI(); }
+        }
+
+        function resetUI() {
             genBtn.disabled = false;
-        } else {
-            throw new Error("ImgBB Upload Failed");
-        }
-    } catch (err) {
-        alert("Upload Error: " + err.message);
-        previewText.innerText = "Upload Failed. Try again.";
-        genBtn.disabled = false;
-    }
-};
-
-// --- 2. GENERATE VIDEO VIA D-ID ---
-async function generateVideo() {
-    const script = document.getElementById('script-input').value;
-    if (!script) return alert("Please enter a script!");
-    if (!uploadedImageUrl) return alert("Please wait for the image to finish uploading!");
-
-    // UI Changes
-    genBtn.disabled = true;
-    document.getElementById('video-placeholder').classList.add('hidden');
-    document.getElementById('loader').classList.remove('hidden');
-
-    try {
-        const response = await fetch("https://api.d-id.com/talks", {
-            method: "POST",
-            headers: {
-                "Authorization": `Basic ${DID_API_KEY}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                "script": {
-                    "type": "text",
-                    "input": script,
-                    "provider": { "type": "microsoft", "voice_id": "en-US-ChristopherNeural" } // Male voice for business vibe
-                },
-                "source_url": uploadedImageUrl // The real photo URL
-            })
-        });
-
-        const data = await response.json();
-        if (data.id) {
-            checkStatus(data.id);
-        } else {
-            throw new Error(data.message || "D-ID Error");
-        }
-    } catch (err) {
-        alert("Error: " + err.message);
-        resetUI();
-    }
-}
-
-// --- 3. CHECK STATUS (POLLING) ---
-async function checkStatus(id) {
-    try {
-        const res = await fetch(`https://api.d-id.com/talks/${id}`, {
-            headers: { "Authorization": `Basic ${DID_API_KEY}` }
-        });
-        const statusData = await res.json();
-
-        if (statusData.status === "done") {
-            const video = document.getElementById('output-video');
-            video.src = statusData.result_url;
-            video.classList.remove('hidden');
             document.getElementById('loader').classList.add('hidden');
-            genBtn.disabled = false;
-        } else if (statusData.status === "error") {
-            alert("D-ID could not process this image/script.");
-            resetUI();
-        } else {
-            // Check again in 4 seconds
-            setTimeout(() => checkStatus(id), 4000);
+            document.getElementById('video-placeholder').classList.remove('hidden');
         }
-    } catch (err) {
-        resetUI();
-    }
-}
-
-function resetUI() {
-    genBtn.disabled = false;
-    document.getElementById('loader').classList.add('hidden');
-    document.getElementById('video-placeholder').classList.remove('hidden');
-}
-    </script>
+    </script>
 </body>
 </html>
